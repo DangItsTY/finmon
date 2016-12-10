@@ -2,8 +2,113 @@
 <html>
 <head>
 	<title>Finance Monster (TBD)</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<body>
-	Hello world!
+<body style="margin:0; padding:0;">
+	<div id="initialView">
+		<div style="display:flex; flex-direction: column; align-items: center; width:320px; height:480px; margin: 0 auto; background-color:lightgray;">
+			<div style="flex-grow: 1;">
+				<h1>Finance Monster</h1>
+			</div>
+			<div style="flex-grow: 1;">
+				<button onclick="setGoal()">Enter Your Daily Goal</button>
+			</div>
+		</div>
+	</div>
+	<div id="gameView">
+		<div style="display:flex; flex-direction: column; align-items: center; width:320px; height:480px; margin: 0 auto; background-color:lightgray;">
+			<div style="position:relative; width:100%;">
+				<img id="collectIcon" onclick="collectReward()" style="position:absolute; top:0; right:0; width:25px; height:25px; background-color:yellow;">
+			</div>
+			<div style="flex-grow: 1;">
+				<h1>Finance Monster</h1>
+			</div>
+			<div style="flex-grow: 1;">
+				<img style="width: 50px; height: 50px; background-color:red;">
+			</div>
+			<div style="flex-grow: 1;">
+				<span id="goalLabel">Goal: </span><span id="goalAmount">0</span>
+			</div>
+			<div style="flex-grow: 1;">
+				<span id="spendLabel">Spend: </span><span id="spendAmount">0</span>
+			</div>
+			<div style="flex-grow: 1;">
+				<button onclick="enterAmount()">Enter</button>
+			</div>
+			<div style="flex-grow: 1;">
+				<button onclick="setGoal()">Enter New Daily Goal</button>
+			</div>
+		</div>
+	</div>
+<script>
+	var goalAmount = 0;
+	var spendAmount = 0;
+	var rewardAmount = 0;
+	var starvationAmount = 0;
+
+	function setGoal() {
+		goalAmount = prompt("Goal: ", "0");
+		document.getElementById("goalAmount").innerHTML = goalAmount;
+		
+		switchView("game");
+	};
+	
+	function initialize() {
+		document.getElementById("gameView").style.display = "none";
+	};
+	initialize();
+	
+	function enterAmount() {
+		spendAmount = prompt("Spend: ", "0");
+		document.getElementById("spendAmount").innerHTML = spendAmount;
+	};
+	
+	function setSpendAmount(value) {
+		spendAmount = value;
+		document.getElementById("spendAmount").innerHTML = spendAmount;
+	};
+	
+	function switchView(type) {
+		switch(type) {
+			case "initial":
+				document.getElementById("initialView").style.display = "inline";
+				document.getElementById("gameView").style.display = "none";
+				break;
+			case "game":
+				document.getElementById("initialView").style.display = "none";
+				document.getElementById("gameView").style.display = "inline";
+				break;
+			default:
+				document.getElementById("initialView").style.display = "none";
+				document.getElementById("gameView").style.display = "inline";
+		}
+	};
+	
+	function collectReward() {
+		alert("You've Earned " + rewardAmount + " Food!");
+	};
+	
+	function endOfDayCalculations() {
+		//	Player does not log spend amount
+		if (spendAmount == 0) {
+			starvationAmount += 1;
+		} else {
+			rewardAmount = rewardAmount + goalAmount - spendAmount;
+			if (rewardAmount < 0) {
+				starvationAmount += 1;
+			} else {
+				starvationAmount = 0;
+			}
+		}
+		setSpendAmount(0);
+		displayInfo();
+	};
+	
+	function displayInfo() {
+		console.log("Reward: " + rewardAmount + "\nStarvation: " + starvationAmount);
+	};
+	
+	var timer = setInterval(endOfDayCalculations, 1000);
+</script>
 </body>
 </html>
