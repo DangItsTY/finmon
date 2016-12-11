@@ -73,7 +73,7 @@
 	var expModifier = 5;
 	var monsterName = "Slimey";
 	var didNotLog = true;
-	var alreadyCollected = false;
+	var collectState = "hide"	//	hide, ready, eaten
 
 	function setGoal() {
 		goalAmount = parseInt(prompt("Goal: ", "0")) || 0;
@@ -86,6 +86,7 @@
 	
 	function initialize() {
 		document.getElementById("gameView").style.display = "none";
+		loadData();
 	};
 	initialize();
 	
@@ -118,7 +119,7 @@
 	};
 	
 	function collectReward() {
-		if (!(alreadyCollected)) {
+		if (collectState == "ready") {
 			if (rewardAmount < 0) {
 				alert("You went over budget by " + rewardAmount + " dollars!");
 			} else {
@@ -127,6 +128,7 @@
 				document.getElementById("expCurrent").innerHTML = foodAmount;
 			}
 			collectDone();
+			writeAllData();
 		} else {
 			alert("You've already collected food for today!");
 		}
@@ -154,21 +156,35 @@
 		console.log("Reward: " + rewardAmount + "\nStarvation: " + starvationAmount + "\nFood: " + foodAmount);
 	};
 	
+	function collectInitialize() {
+		switch (collectState) {
+			case "hide":
+				collectDisabled();
+				break;
+			case "ready":
+				collectDisabled();
+				break;
+			case "eaten":
+				collectDone();
+				break;
+		}
+	};
+	collectInitialize();
+	
 	function collectDisabled() {
+		collectState = "hide";
 		document.getElementById("collectIcon").style.display = "none";
 	};
-	collectDisabled();
 	
 	function collectEnabled() {
-		alreadyCollected = false;
+		collectState = "ready";
 		document.getElementById("collectIcon").src = "Sprites/static/UncollectedMeat1.png";
 		document.getElementById("collectIcon").style.display = "inline";
 	};
 	
 	function collectDone() {
-		alreadyCollected = true;
+		collectState = "eaten";
 		document.getElementById("collectIcon").src = "Sprites/static/CollectedMeat1.png";
-		writeAllData();
 	};
 	
 	function editMonsterName() {
@@ -186,14 +202,13 @@
 		expTotal = parseInt(localStorage.expTotal) || expTotal;
 		monsterName = localStorage.monsterName || monsterName;
 		didNotLog = localStorage.didNotLog || didNotLog;
-		alreadyCollected = localStorage.alreadyCollected || alreadyCollected;
+		collectState = localStorage.collectState || collectState;
 		document.getElementById("goalAmount").innerHTML = goalAmount;
 		document.getElementById("spendAmount").innerHTML = spendAmount;
 		document.getElementById("expCurrent").innerHTML = foodAmount;
 		document.getElementById("expTotal").innerHTML = expTotal;
 		document.getElementById("monsterName").innerHTML = monsterName;
 	};
-	loadData();
 	
 	function writeAllData() {
 		localStorage.goalAmount = goalAmount;
@@ -204,7 +219,7 @@
 		localStorage.expTotal = expTotal;
 		localStorage.monsterName = monsterName;
 		localStorage.didNotLog = didNotLog;
-		localStorage.alreadyCollected = alreadyCollected;
+		localStorage.collectState = collectState;
 	};
 	
 	function clearAllData() {
@@ -217,7 +232,7 @@
 		expModifier = 5;
 		monsterName = "Slimey";
 		didNotLog = true;
-		alreadyCollected = false;
+		collectState = "hide";
 		localStorage.clear();
 		loadData();
 	};
