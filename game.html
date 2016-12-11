@@ -24,7 +24,7 @@
 				<h1>Finance Monster</h1>
 			</div>
 			<div style="flex-grow: 1;">
-				<img style="width: 50px; height: 50px; background-color:red;">
+				<img src="Sprites/animated/Slime1GIF.gif" style="width: 50px; height: 50px;">
 			</div>
 			<div style="flex-grow: 1;">
 				<span id="goalLabel">Goal: </span><span id="goalAmount">0</span>
@@ -45,9 +45,12 @@
 	var spendAmount = 0;
 	var rewardAmount = 0;
 	var starvationAmount = 0;
+	var foodAmount = 0;
+	var didNotLog = true;
+	var alreadyCollected = false;
 
 	function setGoal() {
-		goalAmount = prompt("Goal: ", "0");
+		goalAmount = parseInt(prompt("Goal: ", "0")) || 0;
 		document.getElementById("goalAmount").innerHTML = goalAmount;
 		
 		switchView("game");
@@ -59,8 +62,9 @@
 	initialize();
 	
 	function enterAmount() {
-		spendAmount = prompt("Spend: ", "0");
+		spendAmount = parseInt(prompt("Spend: ", "0")) || 0;
 		document.getElementById("spendAmount").innerHTML = spendAmount;
+		didNotLog = false;
 	};
 	
 	function setSpendAmount(value) {
@@ -85,30 +89,55 @@
 	};
 	
 	function collectReward() {
-		alert("You've Earned " + rewardAmount + " Food!");
+		if (!(alreadyCollected)) {
+			alert("You've earned " + rewardAmount + " food!");
+			foodAmount = foodAmount + rewardAmount;
+			collectDone();
+		} else {
+			alert("You've already collected food for today!");
+		}
+		
 	};
 	
 	function endOfDayCalculations() {
-		//	Player does not log spend amount
-		if (spendAmount == 0) {
+		if (didNotLog) {
 			starvationAmount += 1;
+			collectDisabled();
 		} else {
-			rewardAmount = rewardAmount + goalAmount - spendAmount;
+			rewardAmount = goalAmount - spendAmount;
 			if (rewardAmount < 0) {
 				starvationAmount += 1;
 			} else {
 				starvationAmount = 0;
 			}
+			collectEnabled();
 		}
-		setSpendAmount(0);
 		displayInfo();
+		setSpendAmount(0);
+		didNotLog = true;
 	};
 	
 	function displayInfo() {
-		console.log("Reward: " + rewardAmount + "\nStarvation: " + starvationAmount);
+		console.log("Reward: " + rewardAmount + "\nStarvation: " + starvationAmount + "\nFood: " + foodAmount);
 	};
 	
-	var timer = setInterval(endOfDayCalculations, 1000);
+	function collectDisabled() {
+		document.getElementById("collectIcon").style.display = "none";
+	};
+	collectDisabled();
+	
+	function collectEnabled() {
+		alreadyCollected = false;
+		document.getElementById("collectIcon").style.backgroundColor = "yellow";
+		document.getElementById("collectIcon").style.display = "inline";
+	};
+	
+	function collectDone() {
+		alreadyCollected = true;
+		document.getElementById("collectIcon").style.backgroundColor = "gray";
+	};
+	
+	var timer = setInterval(endOfDayCalculations, 10000);
 </script>
 </body>
 </html>
