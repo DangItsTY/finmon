@@ -58,7 +58,7 @@
 				<img src="Sprites/static/LogButton1.png" width="55px" onclick="enterAmount();">
 			</div>
 			<div style="flex-grow: 1;">
-				<button onclick="setGoal()"><b1>Enter New Daily Goal</b1></button>
+				<button onclick="resetGoal()"><b1>Enter New Daily Goal</b1></button>
 			</div>
 		</div>
 	</div>
@@ -93,6 +93,19 @@
 		switchView("game");
 		writeAllData();
 	};
+	
+	function resetGoal() {
+		goalAmount = parseInt(prompt("Goal: ", "0")) || 0;
+		document.getElementById("goalAmount").innerHTML = goalAmount;
+		expTotal = goalAmount * expModifier;
+		document.getElementById("expTotal").innerHTML = expTotal;
+		foodAmount = 0;
+		didNotLog = true;
+		collectState = "hide";
+		collectInitialize();
+		writeAllData();
+		loadData();
+	}
 	
 	function enterAmount() {
 		spendAmount = parseInt(prompt("Spend: ", "0")) || 0;
@@ -167,7 +180,7 @@
 				collectDisabled();
 				break;
 			case "ready":
-				collectDisabled();
+				collectEnabled();
 				break;
 			case "eaten":
 				collectDone();
