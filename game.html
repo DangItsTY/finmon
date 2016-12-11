@@ -37,8 +37,16 @@
 			<div style="flex-grow: 1;">
 				<h1>Finance Monster</h1>
 			</div>
-			<div style="flex-grow: 1;">
-				<img src="Sprites/animated/Slime1GIF.gif" style="width: 50px; height: 50px;">
+			<div style="flex-grow: 1; text-align:center;">
+				<div>
+					<img src="Sprites/animated/Slime1GIF.gif" style="width: 50px; height: 50px;">
+				</div>
+				<div>
+					<span id="monsterName">Slimey</span><img id="monsterEdit" onclick="editMonsterName()" style="width: 10px; height: 10px; background-color:gray; position:absolute;">
+				</div>
+				<div style="width:200px; background-color:lightblue;">
+					<span>EXP: </span><span id="expCurrent">0</span>/<span id="expTotal">0</span>
+				</div>
 			</div>
 			<div style="flex-grow: 1;">
 				<b1><span id="goalLabel">Goal: </span><span id="goalAmount">0</span></b1>
@@ -60,14 +68,19 @@
 	var rewardAmount = 0;
 	var starvationAmount = 0;
 	var foodAmount = 0;
+	var expTotal = 0;
+	var expModifier = 5;
+	var monsterName = "Slimey";
 	var didNotLog = true;
 	var alreadyCollected = false;
 
 	function setGoal() {
 		goalAmount = parseInt(prompt("Goal: ", "0")) || 0;
 		document.getElementById("goalAmount").innerHTML = goalAmount;
-		
+		expTotal = goalAmount * expModifier;
+		document.getElementById("expTotal").innerHTML = expTotal;
 		switchView("game");
+		writeAllData();
 	};
 	
 	function initialize() {
@@ -79,6 +92,7 @@
 		spendAmount = parseInt(prompt("Spend: ", "0")) || 0;
 		document.getElementById("spendAmount").innerHTML = spendAmount;
 		didNotLog = false;
+		writeAllData();
 	};
 	
 	function setSpendAmount(value) {
@@ -106,11 +120,11 @@
 		if (!(alreadyCollected)) {
 			alert("You've earned " + rewardAmount + " food!");
 			foodAmount = foodAmount + rewardAmount;
+			document.getElementById("expCurrent").innerHTML = foodAmount;
 			collectDone();
 		} else {
 			alert("You've already collected food for today!");
 		}
-		
 	};
 	
 	function endOfDayCalculations() {
@@ -149,6 +163,43 @@
 	function collectDone() {
 		alreadyCollected = true;
 		document.getElementById("collectIcon").src = "Sprites/static/CollectedMeat1.png";
+		writeAllData();
+	};
+	
+	function editMonsterName() {
+		monsterName = prompt("What shall I be named?", monsterName) || monsterName;
+		document.getElementById("monsterName").innerHTML = monsterName;
+		writeAllData();
+	};
+	
+	function loadData() {
+		goalAmount = localStorage.goalAmount || goalAmount;
+		spendAmount = localStorage.spendAmount || spendAmount;
+		rewardAmount = localStorage.rewardAmount || rewardAmount;
+		starvationAmount = localStorage.starvationAmount || starvationAmount;
+		foodAmount = localStorage.foodAmount || foodAmount;
+		expTotal = localStorage.expTotal || expTotal;
+		monsterName = localStorage.monsterName || monsterName;
+		didNotLog = localStorage.didNotLog || didNotLog;
+		alreadyCollected = localStorage.alreadyCollected || alreadyCollected;
+		document.getElementById("goalAmount").innerHTML = goalAmount;
+		document.getElementById("spendAmount").innerHTML = spendAmount;
+		document.getElementById("expCurrent").innerHTML = foodAmount;
+		document.getElementById("expTotal").innerHTML = expTotal;
+		document.getElementById("monsterName").innerHTML = monsterName;
+	};
+	loadData();
+	
+	function writeAllData() {
+		localStorage.goalAmount = goalAmount;
+		localStorage.spendAmount = spendAmount;
+		localStorage.rewardAmount = rewardAmount;
+		localStorage.starvationAmount = starvationAmount;
+		localStorage.foodAmount = foodAmount;
+		localStorage.expTotal = expTotal;
+		localStorage.monsterName = monsterName;
+		localStorage.didNotLog = didNotLog;
+		localStorage.alreadyCollected = alreadyCollected;
 	};
 	
 	var timer = setInterval(endOfDayCalculations, 10000);
