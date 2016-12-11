@@ -65,8 +65,8 @@
 		document.getElementById("goalAmount").innerHTML = goalAmount;
 		expTotal = goalAmount * expModifier;
 		document.getElementById("expTotal").innerHTML = expTotal;
-		
 		switchView("game");
+		writeAllData();
 	};
 	
 	function initialize() {
@@ -78,6 +78,7 @@
 		spendAmount = parseInt(prompt("Spend: ", "0")) || 0;
 		document.getElementById("spendAmount").innerHTML = spendAmount;
 		didNotLog = false;
+		writeAllData();
 	};
 	
 	function setSpendAmount(value) {
@@ -110,7 +111,6 @@
 		} else {
 			alert("You've already collected food for today!");
 		}
-		
 	};
 	
 	function endOfDayCalculations() {
@@ -149,11 +149,43 @@
 	function collectDone() {
 		alreadyCollected = true;
 		document.getElementById("collectIcon").src = "Sprites/static/CollectedMeat1.png";
+		writeAllData();
 	};
 	
 	function editMonsterName() {
 		monsterName = prompt("What shall I be named?", monsterName) || monsterName;
 		document.getElementById("monsterName").innerHTML = monsterName;
+		writeAllData();
+	};
+	
+	function loadData() {
+		goalAmount = localStorage.goalAmount || goalAmount;
+		spendAmount = localStorage.spendAmount || spendAmount;
+		rewardAmount = localStorage.rewardAmount || rewardAmount;
+		starvationAmount = localStorage.starvationAmount || starvationAmount;
+		foodAmount = localStorage.foodAmount || foodAmount;
+		expTotal = localStorage.expTotal || expTotal;
+		monsterName = localStorage.monsterName || monsterName;
+		didNotLog = localStorage.didNotLog || didNotLog;
+		alreadyCollected = localStorage.alreadyCollected || alreadyCollected;
+		document.getElementById("goalAmount").innerHTML = goalAmount;
+		document.getElementById("spendAmount").innerHTML = spendAmount;
+		document.getElementById("expCurrent").innerHTML = foodAmount;
+		document.getElementById("expTotal").innerHTML = expTotal;
+		document.getElementById("monsterName").innerHTML = monsterName;
+	};
+	loadData();
+	
+	function writeAllData() {
+		localStorage.goalAmount = goalAmount;
+		localStorage.spendAmount = spendAmount;
+		localStorage.rewardAmount = rewardAmount;
+		localStorage.starvationAmount = starvationAmount;
+		localStorage.foodAmount = foodAmount;
+		localStorage.expTotal = expTotal;
+		localStorage.monsterName = monsterName;
+		localStorage.didNotLog = didNotLog;
+		localStorage.alreadyCollected = alreadyCollected;
 	};
 	
 	var timer = setInterval(endOfDayCalculations, 10000);
