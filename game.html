@@ -18,13 +18,21 @@
 	<div id="gameView">
 		<div style="display:flex; flex-direction: column; align-items: center; width:320px; height:480px; margin: 0 auto; background-color:lightgray;">
 			<div style="position:relative; width:100%;">
-				<img id="collectIcon" onclick="collectReward()" style="position:absolute; top:0; right:0; width:25px; height:25px; background-color:yellow;">
+				<img src="Sprites/static/UncollectedMeat1.png" id="collectIcon" onclick="collectReward()" style="position:absolute; top:0; right:0; width:25px; height:25px;">
 			</div>
 			<div style="flex-grow: 1;">
 				<h1>Finance Monster</h1>
 			</div>
-			<div style="flex-grow: 1;">
-				<img src="Sprites/animated/Slime1GIF.gif" style="width: 50px; height: 50px;">
+			<div style="flex-grow: 1; text-align:center;">
+				<div>
+					<img src="Sprites/animated/Slime1GIF.gif" style="width: 50px; height: 50px;">
+				</div>
+				<div>
+					<span id="monsterName">Slimey</span><img id="monsterEdit" onclick="editMonsterName()" style="width: 10px; height: 10px; background-color:gray; position:absolute;">
+				</div>
+				<div style="width:200px; background-color:lightblue;">
+					<span>EXP: </span><span id="expCurrent">0</span>/<span id="expTotal">0</span>
+				</div>
 			</div>
 			<div style="flex-grow: 1;">
 				<span id="goalLabel">Goal: </span><span id="goalAmount">0</span>
@@ -46,12 +54,17 @@
 	var rewardAmount = 0;
 	var starvationAmount = 0;
 	var foodAmount = 0;
+	var expTotal = 0;
+	var expModifier = 5;
+	var monsterName = "Slimey";
 	var didNotLog = true;
 	var alreadyCollected = false;
 
 	function setGoal() {
 		goalAmount = parseInt(prompt("Goal: ", "0")) || 0;
 		document.getElementById("goalAmount").innerHTML = goalAmount;
+		expTotal = goalAmount * expModifier;
+		document.getElementById("expTotal").innerHTML = expTotal;
 		
 		switchView("game");
 	};
@@ -92,6 +105,7 @@
 		if (!(alreadyCollected)) {
 			alert("You've earned " + rewardAmount + " food!");
 			foodAmount = foodAmount + rewardAmount;
+			document.getElementById("expCurrent").innerHTML = foodAmount;
 			collectDone();
 		} else {
 			alert("You've already collected food for today!");
@@ -128,13 +142,18 @@
 	
 	function collectEnabled() {
 		alreadyCollected = false;
-		document.getElementById("collectIcon").style.backgroundColor = "yellow";
+		document.getElementById("collectIcon").src = "Sprites/static/UncollectedMeat1.png";
 		document.getElementById("collectIcon").style.display = "inline";
 	};
 	
 	function collectDone() {
 		alreadyCollected = true;
-		document.getElementById("collectIcon").style.backgroundColor = "gray";
+		document.getElementById("collectIcon").src = "Sprites/static/CollectedMeat1.png";
+	};
+	
+	function editMonsterName() {
+		monsterName = prompt("What shall I be named?", monsterName) || monsterName;
+		document.getElementById("monsterName").innerHTML = monsterName;
 	};
 	
 	var timer = setInterval(endOfDayCalculations, 10000);
