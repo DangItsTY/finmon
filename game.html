@@ -62,6 +62,7 @@
 			</div>
 		</div>
 	</div>
+	<button onclick="clearAllData()">Clear Data</button>
 <script>
 	var goalAmount = 0;
 	var spendAmount = 0;
@@ -118,9 +119,13 @@
 	
 	function collectReward() {
 		if (!(alreadyCollected)) {
-			alert("You've earned " + rewardAmount + " food!");
-			foodAmount = foodAmount + rewardAmount;
-			document.getElementById("expCurrent").innerHTML = foodAmount;
+			if (rewardAmount < 0) {
+				alert("You went over budget by " + rewardAmount + " dollars!");
+			} else {
+				alert("You've earned " + rewardAmount + " food!");
+				foodAmount = foodAmount + rewardAmount;
+				document.getElementById("expCurrent").innerHTML = foodAmount;
+			}
 			collectDone();
 		} else {
 			alert("You've already collected food for today!");
@@ -173,12 +178,12 @@
 	};
 	
 	function loadData() {
-		goalAmount = localStorage.goalAmount || goalAmount;
-		spendAmount = localStorage.spendAmount || spendAmount;
-		rewardAmount = localStorage.rewardAmount || rewardAmount;
-		starvationAmount = localStorage.starvationAmount || starvationAmount;
-		foodAmount = localStorage.foodAmount || foodAmount;
-		expTotal = localStorage.expTotal || expTotal;
+		goalAmount = parseInt(localStorage.goalAmount) || goalAmount;
+		spendAmount = parseInt(localStorage.spendAmount) || spendAmount;
+		rewardAmount = parseInt(localStorage.rewardAmount) || rewardAmount;
+		starvationAmount = parseInt(localStorage.starvationAmount) || starvationAmount;
+		foodAmount = parseInt(localStorage.foodAmount) || foodAmount;
+		expTotal = parseInt(localStorage.expTotal) || expTotal;
 		monsterName = localStorage.monsterName || monsterName;
 		didNotLog = localStorage.didNotLog || didNotLog;
 		alreadyCollected = localStorage.alreadyCollected || alreadyCollected;
@@ -200,6 +205,21 @@
 		localStorage.monsterName = monsterName;
 		localStorage.didNotLog = didNotLog;
 		localStorage.alreadyCollected = alreadyCollected;
+	};
+	
+	function clearAllData() {
+		goalAmount = 0;
+		spendAmount = 0;
+		rewardAmount = 0;
+		starvationAmount = 0;
+		foodAmount = 0;
+		expTotal = 0;
+		expModifier = 5;
+		monsterName = "Slimey";
+		didNotLog = true;
+		alreadyCollected = false;
+		localStorage.clear();
+		loadData();
 	};
 	
 	var timer = setInterval(endOfDayCalculations, 10000);
