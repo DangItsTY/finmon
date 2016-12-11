@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style type = "text/css">
+  @font-face {
+  font-family: "Pixel";
+  src: url("Fonts/PressStart2P.ttf");
+  }
+  h1 {
+  font-family: Pixel;
+  font-size: 125%;
+  }
+  b1 {
+  font-family: Pixel;
+  font-size: 75%;
+  }
+ </style>
 	<title>Finance Monster (TBD)</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
@@ -11,14 +25,14 @@
 				<h1>Finance Monster</h1>
 			</div>
 			<div style="flex-grow: 1;">
-				<button onclick="setGoal()">Enter Your Daily Goal</button>
+				<button onclick="setGoal()"><b1>Enter Your Daily Goal</b1></button>
 			</div>
 		</div>
 	</div>
 	<div id="gameView">
 		<div style="display:flex; flex-direction: column; align-items: center; width:320px; height:480px; margin: 0 auto; background-color:lightgray;">
 			<div style="position:relative; width:100%;">
-				<img id="collectIcon" onclick="collectReward()" style="position:absolute; top:0; right:0; width:25px; height:25px; background-color:yellow;">
+				<img id="collectIcon" onclick="collectReward()" style="position:absolute; top:0; right:0; width:25px; height:25px;">
 			</div>
 			<div style="flex-grow: 1;">
 				<h1>Finance Monster</h1>
@@ -27,16 +41,16 @@
 				<img src="Sprites/animated/Slime1GIF.gif" style="width: 50px; height: 50px;">
 			</div>
 			<div style="flex-grow: 1;">
-				<span id="goalLabel">Goal: </span><span id="goalAmount">0</span>
+				<b1><span id="goalLabel">Goal: </span><span id="goalAmount">0</span></b1>
 			</div>
 			<div style="flex-grow: 1;">
-				<span id="spendLabel">Spend: </span><span id="spendAmount">0</span>
+				<b1><span id="spendLabel">Spend: </span><span id="spendAmount">0</span></b1>
 			</div>
 			<div style="flex-grow: 1;">
-				<button onclick="enterAmount()">Enter</button>
+				<img src="Sprites/static/LogButton1.png" width="55px" onclick="enterAmount();">
 			</div>
 			<div style="flex-grow: 1;">
-				<button onclick="setGoal()">Enter New Daily Goal</button>
+				<button onclick="setGoal()"><b1>Enter New Daily Goal</b1></button>
 			</div>
 		</div>
 	</div>
@@ -128,13 +142,13 @@
 	
 	function collectEnabled() {
 		alreadyCollected = false;
-		document.getElementById("collectIcon").style.backgroundColor = "yellow";
+		document.getElementById("collectIcon").src = "Sprites/static/UncollectedMeat1.png";
 		document.getElementById("collectIcon").style.display = "inline";
 	};
 	
 	function collectDone() {
 		alreadyCollected = true;
-		document.getElementById("collectIcon").style.backgroundColor = "gray";
+		document.getElementById("collectIcon").src = "Sprites/static/CollectedMeat1.png";
 	};
 	
 	var timer = setInterval(endOfDayCalculations, 10000);
