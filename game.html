@@ -74,7 +74,17 @@
 	var monsterName = "Slimey";
 	var didNotLog = true;
 	var collectState = "hide"	//	hide, ready, eaten
-
+	
+	function initialize() {
+		document.getElementById("gameView").style.display = "none";
+		loadData();
+		collectInitialize();
+		if (foodAmount > 0) {
+			switchView("game");
+		}
+	};
+	initialize();
+	
 	function setGoal() {
 		goalAmount = parseInt(prompt("Goal: ", "0")) || 0;
 		document.getElementById("goalAmount").innerHTML = goalAmount;
@@ -83,12 +93,6 @@
 		switchView("game");
 		writeAllData();
 	};
-	
-	function initialize() {
-		document.getElementById("gameView").style.display = "none";
-		loadData();
-	};
-	initialize();
 	
 	function enterAmount() {
 		spendAmount = parseInt(prompt("Spend: ", "0")) || 0;
@@ -150,6 +154,7 @@
 		displayInfo();
 		setSpendAmount(0);
 		didNotLog = true;
+		writeAllData();
 	};
 	
 	function displayInfo() {
@@ -169,7 +174,6 @@
 				break;
 		}
 	};
-	collectInitialize();
 	
 	function collectDisabled() {
 		collectState = "hide";
